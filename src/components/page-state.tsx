@@ -1,0 +1,4 @@
+import { LoaderCircle, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+export function LoadingState() { return <div role="status" className="flex min-h-64 items-center justify-center gap-3 text-muted-foreground"><LoaderCircle className="size-5 animate-spin" /> Loading the catalog…</div>; }
+export function ErrorState({ error, retry }: { error: unknown; retry: () => void }) { return <div role="alert" className="space-y-4 rounded-2xl border bg-card p-8"><AlertCircle className="size-6 text-amber-700" /><h2 className="text-lg font-semibold">We could not load the catalog.</h2><p className="text-sm text-muted-foreground">{error instanceof Error ? error.message : 'Please try again.'}</p><p className="text-xs text-muted-foreground">For local development, run <code>npm run db:setup</code>. We do not silently substitute invented data for a failed request.</p><Button onClick={retry}>Try again</Button></div>; }
