@@ -1,0 +1,39 @@
+# One-off maintenance job for the initial migration branch. Removed before review.
+name: Refresh patched dependencies
+on:
+  push:
+    branches: [feat/cloudflare-foundation]
+    paths: [.github/workflows/refresh-dependencies.yml]
+permissions:
+  contents: write
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/cloudflare-foundation
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Update to patched releases
+        run: |
+          npm pkg set 'overrides.@esbuild-kit/core-utils.esbuild=^0.25.0'
+          npm install drizzle-orm@0.45.2 --save-exact --no-fund
+          npm install --save-dev vitest@4.1.11 --save-exact --no-fund
+      - name: Verify dependency audit and core checks
+        run: |
+          npm audit
+          npm run typecheck
+          npm test
+          npm run db:check
+      - name: Commit the reviewed dependency changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package.json package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: use patched Drizzle, Vitest and esbuild dependencies'
+            git push origin HEAD:feat/cloudflare-foundation
+          fi
