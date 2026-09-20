@@ -17,6 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Use an updated dependency resolver
+        run: npm install --global npm@11
       - name: Resolve patched dependencies together
         run: |
           node --input-type=module <<'NODE'
@@ -28,7 +30,7 @@ jobs:
           fs.writeFileSync('package.json', JSON.stringify(p, null, 2) + '\n');
           NODE
           rm -f package-lock.json
-          npm install --no-fund
+          npm install --no-fund || { tail -100 /home/runner/.npm/_logs/*debug-0.log; exit 1; }
       - name: Verify dependency audit and core checks
         run: |
           npm audit
