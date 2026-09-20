@@ -1,0 +1,390 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "4ed201c0-9d09-43ba-bfaa-4484241a3419",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "nutrition": {
+      "name": "nutrition",
+      "columns": {
+        "product_id": {
+          "name": "product_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "calories": {
+          "name": "calories",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "fat": {
+          "name": "fat",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "saturated": {
+          "name": "saturated",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "carbs": {
+          "name": "carbs",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "sugars": {
+          "name": "sugars",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "added_sugars": {
+          "name": "added_sugars",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "fibre": {
+          "name": "fibre",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "protein": {
+          "name": "protein",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "sodium": {
+          "name": "sodium",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "nutrition_product_id_products_id_fk": {
+          "name": "nutrition_product_id_products_id_fk",
+          "tableFrom": "nutrition",
+          "tableTo": "products",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "nutrition_calories_range": {
+          "name": "nutrition_calories_range",
+          "value": "\"nutrition\".\"calories\" IS NULL OR \"nutrition\".\"calories\" BETWEEN 0 AND 1000"
+        },
+        "nutrition_sodium_range": {
+          "name": "nutrition_sodium_range",
+          "value": "\"nutrition\".\"sodium\" IS NULL OR \"nutrition\".\"sodium\" BETWEEN 0 AND 100000"
+        },
+        "nutrition_grams_range": {
+          "name": "nutrition_grams_range",
+          "value": "(\"nutrition\".\"fat\" IS NULL OR \"nutrition\".\"fat\" BETWEEN 0 AND 100) AND (\"nutrition\".\"saturated\" IS NULL OR \"nutrition\".\"saturated\" BETWEEN 0 AND 100) AND (\"nutrition\".\"carbs\" IS NULL OR \"nutrition\".\"carbs\" BETWEEN 0 AND 100) AND (\"nutrition\".\"sugars\" IS NULL OR \"nutrition\".\"sugars\" BETWEEN 0 AND 100) AND (\"nutrition\".\"added_sugars\" IS NULL OR \"nutrition\".\"added_sugars\" BETWEEN 0 AND 100) AND (\"nutrition\".\"fibre\" IS NULL OR \"nutrition\".\"fibre\" BETWEEN 0 AND 100) AND (\"nutrition\".\"protein\" IS NULL OR \"nutrition\".\"protein\" BETWEEN 0 AND 100)"
+        },
+        "nutrition_sugar_subset": {
+          "name": "nutrition_sugar_subset",
+          "value": "\"nutrition\".\"sugars\" IS NULL OR \"nutrition\".\"carbs\" IS NULL OR \"nutrition\".\"sugars\" <= \"nutrition\".\"carbs\""
+        },
+        "nutrition_fat_subset": {
+          "name": "nutrition_fat_subset",
+          "value": "\"nutrition\".\"saturated\" IS NULL OR \"nutrition\".\"fat\" IS NULL OR \"nutrition\".\"saturated\" <= \"nutrition\".\"fat\""
+        },
+        "nutrition_added_sugar_subset": {
+          "name": "nutrition_added_sugar_subset",
+          "value": "\"nutrition\".\"added_sugars\" IS NULL OR \"nutrition\".\"sugars\" IS NULL OR \"nutrition\".\"added_sugars\" <= \"nutrition\".\"sugars\""
+        }
+      }
+    },
+    "price_observations": {
+      "name": "price_observations",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "price_cents": {
+          "name": "price_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "package_grams": {
+          "name": "package_grams",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'CAD'"
+        },
+        "retailer": {
+          "name": "retailer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "observed_at": {
+          "name": "observed_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "prices_product_observed_idx": {
+          "name": "prices_product_observed_idx",
+          "columns": [
+            "product_id",
+            "observed_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "price_observations_product_id_products_id_fk": {
+          "name": "price_observations_product_id_products_id_fk",
+          "tableFrom": "price_observations",
+          "tableTo": "products",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "prices_amount_check": {
+          "name": "prices_amount_check",
+          "value": "\"price_observations\".\"price_cents\" >= 0"
+        },
+        "prices_weight_check": {
+          "name": "prices_weight_check",
+          "value": "\"price_observations\".\"package_grams\" > 0"
+        }
+      }
+    },
+    "products": {
+      "name": "products",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "barcode": {
+          "name": "barcode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "brand": {
+          "name": "brand",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "market": {
+          "name": "market",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'CA'"
+        },
+        "ingredients": {
+          "name": "ingredients",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "allergens": {
+          "name": "allergens",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "artwork": {
+          "name": "artwork",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_demo": {
+          "name": "is_demo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        }
+      },
+      "indexes": {
+        "products_market_barcode_unique": {
+          "name": "products_market_barcode_unique",
+          "columns": [
+            "market",
+            "barcode"
+          ],
+          "isUnique": true
+        },
+        "products_category_idx": {
+          "name": "products_category_idx",
+          "columns": [
+            "category"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "products_category_check": {
+          "name": "products_category_check",
+          "value": "\"products\".\"category\" IN ('flakes', 'granola')"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}
