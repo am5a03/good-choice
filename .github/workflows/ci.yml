@@ -1,0 +1,52 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Audit dependencies
+        run: |
+          status=0
+          npm audit --audit-level=moderate --json > dependency-audit.json || status=$?
+          node -e "const a=require('./dependency-audit.json'); console.log(JSON.stringify(a.metadata?.vulnerabilities||a.error)); for (const [name,v] of Object.entries(a.vulnerabilities||{})) console.log(name, v.severity, 'fix:', JSON.stringify(v.fixAvailable));"
+          exit "$status"
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run db:check
+      - name: Apply migrations and seed a local D1 database
+        run: npm run db:setup
+      - name: Verify migrations and fixtures can be applied again
+        run: npm run db:setup
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Package the source snapshot
+        if: always()
+        run: git archive --format=zip HEAD -o goodchoice-cloudflare.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: goodchoice-verification
+          path: |
+            playwright-report/
+            test-results/
+            dependency-audit.json
+            goodchoice-cloudflare.zip
+          retention-days: 14
