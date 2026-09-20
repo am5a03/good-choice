@@ -21,10 +21,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Record dependency audit
+      - name: Audit dependencies
         run: |
-          npm audit --json > dependency-audit.json || true
-          node -e "const a=require('./dependency-audit.json'); for (const [name,v] of Object.entries(a.vulnerabilities||{})) console.log(name, v.severity, JSON.stringify(v.via), 'fix:', JSON.stringify(v.fixAvailable));"
+          status=0
+          npm audit --audit-level=moderate --json > dependency-audit.json || status=$?
+          node -e "const a=require('./dependency-audit.json'); console.log(JSON.stringify(a.metadata?.vulnerabilities||a.error)); for (const [name,v] of Object.entries(a.vulnerabilities||{})) console.log(name, v.severity, 'fix:', JSON.stringify(v.fixAvailable));"
+          exit "$status"
       - run: npm run typecheck
       - run: npm test
       - run: npm run db:check
