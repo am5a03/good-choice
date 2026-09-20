@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "good-choice",
+  "main": "server/index.ts",
+  "compatibility_date": "2025-09-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api", "/api/*"]
+  },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "good-choice-db",
+    "database_id": "00000000-0000-0000-0000-000000000000",
+    "migrations_dir": "db/migrations"
+  }],
+  "observability": { "enabled": true }
+}
