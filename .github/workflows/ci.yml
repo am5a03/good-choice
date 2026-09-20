@@ -21,6 +21,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Record dependency audit
+        run: |
+          npm audit --json > dependency-audit.json || true
+          node -e "const a=require('./dependency-audit.json'); for (const [name,v] of Object.entries(a.vulnerabilities||{})) console.log(name, v.severity, JSON.stringify(v.via), 'fix:', JSON.stringify(v.fixAvailable));"
       - run: npm run typecheck
       - run: npm test
       - run: npm run db:check
@@ -41,5 +45,6 @@ jobs:
           path: |
             playwright-report/
             test-results/
+            dependency-audit.json
             goodchoice-cloudflare.zip
           retention-days: 14
